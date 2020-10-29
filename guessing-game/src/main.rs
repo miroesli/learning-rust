@@ -1,11 +1,11 @@
-use std::io;
-use std::cmp::Ordering;
-// use std::io::{self, Write};
 use rand::Rng;
+use std::cmp::Ordering;
+use std::io;
+use std::io::Write;
 
 fn get_ai_guess(min: u32, max: u32) -> u32 {
     // AI's guess
-    return min + ((max-min)/2);
+    return min + ((max - min) / 2);
 }
 
 fn main() {
@@ -17,7 +17,7 @@ fn main() {
 
     if debug {
         println!("The secret number is: {}", secret_number);
-    }  
+    }
 
     println!("My friend Fred will also try to guess. Try to guess it before him!");
 
@@ -25,14 +25,13 @@ fn main() {
     let mut max: u32 = 100;
 
     loop {
-        println!("Please input your guess.");
-        //TODO: Fix input to be on same line
-        // print!("Your guess: ");
-        // io::stdout().flush().unwrap();
+        print!("Your guess: ");
+        io::stdout().flush().unwrap();
 
         let mut guess = String::new();
 
-        io::stdin().read_line(&mut guess)
+        io::stdin()
+            .read_line(&mut guess)
             .expect("Failed to read line");
 
         let guess: u32 = match guess.trim().parse() {
@@ -40,25 +39,23 @@ fn main() {
             Err(_) => continue,
         };
 
-        println!("You guessed: {}", guess);
+        let aiguess = get_ai_guess(min, max);
 
-        let aiguess = get_ai_guess(min,max);
-
-        println!("Fred guessed: {}", aiguess);
+        println!("Fred's guess: {}", aiguess);
 
         match guess.cmp(&secret_number) {
             Ordering::Less => {
                 println!("Your guess is too small!");
-                if guess>min {
+                if guess > min {
                     min = guess;
                 }
-            },
+            }
             Ordering::Greater => {
                 println!("Your guess is too big!");
-                if guess<max {
+                if guess < max {
                     max = guess;
                 }
-            },
+            }
             Ordering::Equal => {
                 println!("You won!");
                 break;
@@ -68,16 +65,16 @@ fn main() {
         match aiguess.cmp(&secret_number) {
             Ordering::Less => {
                 println!("Fred's guess is too small!");
-                if aiguess>min {
+                if aiguess > min {
                     min = aiguess;
                 }
-            },
+            }
             Ordering::Greater => {
                 println!("Fred's guess is too big!");
-                if aiguess<max {
+                if aiguess < max {
                     max = aiguess;
                 }
-            },
+            }
             Ordering::Equal => {
                 println!("Fred won!");
                 break;
